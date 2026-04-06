@@ -1,0 +1,18 @@
+<h2>Add Product</h2>
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    Name: <input type="text" name="name"><br><br>
+    Price: <input type="number" name="price"><br><br>
+
+    Category:
+    <select name="category">
+        <option value="">Select Category</option>
+        {% for c in categories %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Save</button>
+</form>

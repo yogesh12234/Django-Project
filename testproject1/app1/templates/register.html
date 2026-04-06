@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #a2c3e6;
+        }
+        .card {
+            max-width: 500px;
+            margin: 60px auto;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .btn-custom {
+            width: 100%;
+            background-color: green;
+            color: white;
+        }
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        /* Navbar Style */
+        .navbar-custom {
+            background-color: #5a4fa3;
+        }
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-brand {
+            color: white !important;
+        }
+        .nav-link.active {
+            font-weight: bold;
+            border-bottom: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ✅ Navbar Start -->
+<nav class="navbar navbar-expand-lg navbar-custom px-4">
+    <a class="navbar-brand fw-bold" href="#">CloudStrats</a>
+
+    <div class="ms-auto">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/register/">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/login/">Login</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<!-- ✅ Navbar End -->
+
+<div class="card shadow bg-light">
+    <h2 class="text-center">Register</h2>
+    <p class="text-center text-muted">Create your account. It's free.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <!-- Name Row -->
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.first_name }}
+            </div>
+            <div class="col-md-6">
+                {{ form.last_name }}
+            </div>
+        </div>
+
+        {{ form.email }}
+        {{ form.username }}
+        {{ form.password1 }}
+    
+        <button type="submit" class="btn btn-custom mt-3">Register Now</button>
+    </form>
+
+    <p class="text-center mt-3">
+        Already have an account? <a href="/login/">Sign in</a>
+    </p>
+</div>
+
+</body>
+</html>

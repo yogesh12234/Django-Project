@@ -1,0 +1,246 @@
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+
+    <!-- Bootstrap CSS (ADD THIS) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 5px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #444;
+            min-width: 150px;
+            top: 40px;
+            right: 0;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            padding: 10px;
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                background: #333;
+                width: 100%;
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn-ui {
+            background: #00c6ff;
+        }
+
+        .btn-ui:hover {
+            background: #0072ff;
+        }
+
+        .btn-api {
+            background: #ff7e5f;
+        }
+
+        .btn-api:hover {
+            background: #eb5757;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 15px;
+            margin: 10px auto;
+            width: 250px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Carousel Fix */
+        .carousel img {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="navbar">
+    <div class="logo">CloudStrats</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="menu">
+        <li><a href="/">Home</a></li>
+        <li><a href="/">About</a></li>
+
+        <li class="dropdown">
+            <a href="#">Account ▾</a>
+            <div class="dropdown-content">
+                <a href="/register/">Register</a>
+                <a href="/login/">Login</a>
+                <a href="/logout/">Logout</a>
+                <a href="/admin/">Admin</a>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="container mt-4">
+    <div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+
+            <div class="carousel-item active">
+                <img src="https://picsum.photos/1200/400?1" class="d-block w-100">
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400?2" class="d-block w-100">
+            </div>
+
+            <div class="carousel-item">
+                <img src="https://picsum.photos/1200/400?3" class="d-block w-100">
+            </div>
+
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+
+    </div>
+</div>
+<!-- ✅ CAROUSEL END -->
+
+<!-- Main Content -->
+<div class="container">
+
+    <h1>Welcome {{ request.user.username }} 🚀</h1>
+
+    <a href="/products/" class="btn btn-ui">🛍️ Go to Products </a>
+    <a href="/api/products/" class="btn btn-api">⚙️ View API Products</a>
+
+    <div id="product-list"></div>
+
+</div>
+
+<!-- JS -->
+<script>
+function toggleMenu() {
+    document.getElementById("menu").classList.toggle("active");
+}
+
+fetch('/api/products/')
+.then(response => response.json())
+.then(data => {
+    let list = document.getElementById('product-list');
+
+    data.forEach(item => {
+        let div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `<h3>${item.name}</h3><p>Price: ₹${item.price}</p>`;
+        list.appendChild(div);
+    });
+});
+</script>
+
+<!-- Bootstrap JS (IMPORTANT for carousel) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+{% endblock %}
